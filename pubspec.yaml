@@ -1,0 +1,19 @@
+name: nanodart
+description: Tools for the NANO and BANANO cryptocurrencies including key generation, signing, encryption, and more.
+version: 1.0.0
+homepage: https://github.com/appditto/nanodart
+author: Appditto LLC <hello@appditto.com>
+
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  pointycastle: ^1.0.1
+  hex: ^0.1.2
+  convert: ^2.1.1
+  fixnum: ^0.10.9
+  bip39: ^1.0.3
+
+dev_dependencies:
+  pedantic: ^1.8.0+1
+  test: ^1.6.8

@@ -1,4 +1,5 @@
 # NanoDart
+[![Pub](https://img.shields.io/pub/v/nanodart)](https://pub.dev/packages/nanodart) [![Pipeline](https://gitlab.com/appditto/nanodart/badges/master/pipeline.svg)](https://gitlab.com/appditto/nanodart/pipelines)
 
 A [Nano](https://nano.org) and [Banano](https://banano.cc) cryptocurrency library for the [Dart](https://dart.dev) programming language
 

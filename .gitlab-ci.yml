@@ -1,0 +1,19 @@
+image: google/dart:latest
+
+stages:
+  - test
+
+before_script:
+  - export PUB_CACHE=$PWD/.pub_cache/
+  - pub version
+  - pub get
+  - pub upgrade
+
+test:
+  stage: test
+  script:
+    - pub run test
+  only:
+    - master
+  tags:
+    - docker

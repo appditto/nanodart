@@ -21,6 +21,8 @@ file(GLOB Ed25519_HEADER ${CMAKE_CURRENT_SOURCE_DIR}/ed25519-donna/*.h)
 add_library(ed25519-donna ${Ed25519_SOURCES} ${Ed25519_HEADER})
 
 target_link_libraries(ed25519_blake2b blake2b)
+target_link_libraries(ed25519_blake2b ed25519-donna)
+target_link_libraries(ed25519_blake2b OpenSSL::Crypto)
 
 set_target_properties(ed25519_blake2b PROPERTIES
     PUBLIC_HEADER ed25519_blake2b.h

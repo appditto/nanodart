@@ -5,14 +5,15 @@ homepage: https://github.com/appditto/nanodart
 author: Appditto LLC <hello@appditto.com>
 
 environment:
-  sdk: '>=2.2.0 <3.0.0'
+  sdk: '>=2.5.0-dev.2.1 <3.0.0'
 
 dependencies:
-  pointycastle: ^1.0.1
+  pointycastle: ^1.0.2
   hex: ^0.1.2
   convert: ^2.1.1
-  fixnum: ^0.10.9
+  fixnum: ^0.10.11
   bip39: ^1.0.3
+  ffi: ^0.1.3
 
 dev_dependencies:
   pedantic: ^1.8.0+1

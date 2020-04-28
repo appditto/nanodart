@@ -14,8 +14,7 @@ class Ed25519Blake2b {
   var pubkeyFunc;
 
   Ed25519Blake2b() {
-    String root = Directory.current.toString();
-    root = '/Users/beb279/repos/nanodart/lib/src/ffi';
+    String root = p.join(Directory.current.path, "lib", "src", "ffi", "c");
     String path = p.join(root, 'libed25519_blake2b.so');
     if (Platform.isMacOS) path = p.join(root, 'libed25519_blake2b.dylib');
     if (Platform.isWindows) path = p.join(root, 'libed25519_blake2b.dll');
@@ -28,13 +27,21 @@ class Ed25519Blake2b {
     pubkeyFunc = pkPointer.asFunction<Publickey>();
   }
 
-  Uint8List getPubkey(Uint8List secretKey) {
-    final pointer = allocate<Uint8>(count: secretKey.length);
-    for(var i = 0; i < secretKey.length; i++){
-      pointer[secretKey.length] = secretKey[i];
+  Pointer<Uint8> _bytesToPointer(Uint8List bytes) {
+    final length = bytes.lengthInBytes;
+    final result = allocate<Uint8>(count: length);
+
+    for (var i = 0; i < length; ++i) {
+      result[i] = bytes[i];
     }
+
+    return result;
+  }
+
+  Uint8List getPubkey(Uint8List secretKey) {
+    final pointer = _bytesToPointer(secretKey);
     Pointer<Uint8> result = pubkeyFunc(pointer);
     free(pointer);
-    return result.asTypedList(secretKey.length);
+    return result.asTypedList(32);
   }
 }

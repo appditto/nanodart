@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "ed25519-randombytes.h": "c"
+    }
+}

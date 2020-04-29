@@ -12,8 +12,8 @@ void dart_privatekey(ed25519_secret_key sk, unsigned char* seed, uint32_t index)
   indexBytes[3] = index & 0xFF;
 
   blake2b_Init(&b2b, 32);
-  blake2b_Update(&b2b, seed, sizeof(seed));
-  blake2b_Update(&b2b, indexBytes, sizeof(indexBytes));
+  blake2b_Update(&b2b, seed, 32);
+  blake2b_Update(&b2b, indexBytes, 4);
   blake2b_Final(&b2b, sk, 32);
 }
 
@@ -21,22 +21,13 @@ void dart_publickey(unsigned char* sk, ed25519_public_key pk) {
   ed25519_publickey(sk, pk);
 }
 
-/*
-static PyObject *signature(PyObject *self, PyObject *args) {
-  const unsigned char *m, *randr, *sk, *pk;
-  int i, j, k, l;
-  ed25519_signature sig;
-
-  if (!PyArg_ParseTuple(args, "y#y#y#y#", &m, &i, &randr, &j, &sk, &k, &pk, &l))
-    return NULL;
-  ed25519_sign(m, i, randr, sk, pk, sig);
-  return Py_BuildValue("y#", &sig, 64);
+void dart_sign(ed25519_signature sig, size_t mlen, unsigned char *m, unsigned char *randr, ed25519_secret_key sk) {
+  ed25519_public_key pk;
+  dart_publickey(sk, pk);
+  ed25519_sign(m, mlen, randr, sk, pk, sig);
 }
 
-static PyObject *checkvalid(PyObject *self, PyObject *args) {
-  const unsigned char *sig, *m, *pk;
-  int i, j, k;
-
-  if (!PyArg_ParseTuple(args, "y#y#y#", &sig, &i, &m, &j, &pk, &k)) return NULL;
-  return Py_BuildValue("i", ed25519_sign_open(m, j, pk, sig));
-}*/
+int dart_validate_sig(ed25519_signature sig, size_t mlen, unsigned char *m, ed25519_public_key pk) {
+  int valid = ed25519_sign_open(m, mlen, pk, sig) == 0;
+  return valid;
+}

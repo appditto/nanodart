@@ -5,13 +5,20 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as p;
 
-// C publickey function - unsigned char* publickey(unsigned char *sk);
-typedef publickey_func = Pointer<Uint8> Function(Pointer<Uint8> sk);
-typedef Publickey = Pointer<Uint8> Function(Pointer<Uint8> sk);
+import '../../nanodart.dart';
+
+// C publickey function - unsigned char* dart_publickey(unsigned char *sk, unsigned char *pk);
+typedef publickey_func = Void Function(Pointer<Uint8> sk, Pointer<Uint8> pk);
+typedef Publickey = void Function(Pointer<Uint8> sk, Pointer<Uint8> pk);
+
+// C privatekey function - unsigned char* dart_privatekey(unsigned char *sk, unsigned char *seed, int index);
+typedef privatekey_func = Pointer<Uint8> Function(Pointer<Uint8> sk, Pointer<Uint8> seed, Uint32 index);
+typedef Privatekey = Pointer<Uint8> Function(Pointer<Uint8> sk, Pointer<Uint8> seed, int index);
 
 class Ed25519Blake2b {
   DynamicLibrary _dylib;
   var pubkeyFunc;
+  var privkeyFunc;
 
   Ed25519Blake2b() {
     String root = p.join(Directory.current.path, "lib", "src", "ffi", "c");
@@ -23,8 +30,11 @@ class Ed25519Blake2b {
     _dylib = DynamicLibrary.open(path);
 
     // Publickey
-    final pkPointer = _dylib.lookup<NativeFunction<publickey_func>>('dart_publickey');
-    pubkeyFunc = pkPointer.asFunction<Publickey>();
+    final pubkeyPointer = _dylib.lookup<NativeFunction<publickey_func>>('dart_publickey');
+    pubkeyFunc = pubkeyPointer.asFunction<Publickey>();
+    // Privatekey
+    final privkeyPointer = _dylib.lookup<NativeFunction<privatekey_func>>('dart_privatekey');
+    privkeyFunc = privkeyPointer.asFunction<Privatekey>();
   }
 
   Pointer<Uint8> _bytesToPointer(Uint8List bytes) {
@@ -40,8 +50,17 @@ class Ed25519Blake2b {
 
   Uint8List getPubkey(Uint8List secretKey) {
     final pointer = _bytesToPointer(secretKey);
-    Pointer<Uint8> result = pubkeyFunc(pointer);
+    final result = allocate<Uint8>(count: 32);
+    pubkeyFunc(pointer, result);
     free(pointer);
     return result.asTypedList(32);
+  }
+
+  Uint8List derivePrivkey(Uint8List seed, int index) {
+    final seedPointer = _bytesToPointer(seed);
+    final result = allocate<Uint8>(count: 32);
+    privkeyFunc(result, seedPointer, index);
+    free(seedPointer);
+    return result.asTypedList(32);    
   }
 }

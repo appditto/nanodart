@@ -96,10 +96,8 @@ void main() {
 
       String signature = NanoSignatures.signBlock(hash, privKey);
 
-      /*
       expect(signature,
-            '1123C926EF53B0FFA3585D5F6FA17D05B2AAD486D28CBEED88837B83265F264CBAF3FEA78AF80AAB4C59740546B220ADBE207F6B800FFE864E0934E9C1078401');*/
-      expect(NanoSignatures.validateSig(hash, NanoHelpers.hexToBytes(NanoKeys.createPublicKey(privKey)), NanoHelpers.hexToBytes(signature)), true);
+            '1123C926EF53B0FFA3585D5F6FA17D05B2AAD486D28CBEED88837B83265F264CBAF3FEA78AF80AAB4C59740546B220ADBE207F6B800FFE864E0934E9C1078401');
     });
     test('Can turn a nano seed into a mnemonic phrase and back', () {
       String seed = 'BE3E51EE51BAB11950B2495013512FEB110D9898B4137DA268709621CE2862F4';

@@ -13,7 +13,6 @@ dependencies:
   convert: ^2.1.1
   fixnum: ^0.10.11
   bip39: ^1.0.3
-  ffi: ^0.1.3
 
 dev_dependencies:
   pedantic: ^1.8.0+1

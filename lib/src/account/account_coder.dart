@@ -16,18 +16,18 @@ class NanoAccountEncodes {
     }
   }
 
-  String getBinary(String character) {
+  String? getBinary(String character) {
     return binaryTable[character];
   }
 
-  String getCharacter(String binary) {
+  String? getCharacter(String binary) {
     return characterTable[binary];
   }
 
   String decode(String encoded) {
     String decoded = "";
     for (int i = 0; i < encoded.length; i++) {
-      decoded += getBinary(encoded[i]);
+      decoded += getBinary(encoded[i])!;
     }
     return decoded;
   }
@@ -35,7 +35,7 @@ class NanoAccountEncodes {
   String encode(String decoded) {
     String encoded = "";
     for (int i = 0; i < decoded.length; i += 5) {
-      encoded += getCharacter(decoded.substring(i, i + 5));
+      encoded += getCharacter(decoded.substring(i, i + 5))!;
     }
     return encoded;
   }

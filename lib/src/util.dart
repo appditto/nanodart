@@ -96,7 +96,7 @@ class NanoHelpers {
 
   /// Convert string to byte array
   static Uint8List stringToBytesUtf8(String str) {
-    return utf8.encode(str);
+    return utf8.encode(str) as Uint8List;
   } 
 
   /// Convert byte array to string utf-8

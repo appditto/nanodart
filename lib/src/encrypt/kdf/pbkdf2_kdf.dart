@@ -10,7 +10,7 @@ class PBKDF2 extends KDF {
   /// Derive a KeyIV with given password and optional salt
   /// Expects password to be a utf-8 string
   /// If salt is not provided, a random 8-byte one will be generated
-  KeyIV deriveKey(String password, { Uint8List salt }) {
+  KeyIV deriveKey(String password, { Uint8List? salt }) {
     Uint8List pwBytes = NanoHelpers.stringToBytesUtf8(password);
     Uint8List saltBytes = salt == null ? Uint8List(1) : salt;
 

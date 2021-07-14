@@ -19,7 +19,7 @@ class NanoAccounts {
         encodedChecksum;
   }
 
-  static String findAccountInString(int accountType, String account) {
+  static String? findAccountInString(int accountType, String account) {
     assert(accountType == NanoAccountType.BANANO ||
         accountType == NanoAccountType.NANO);
     assert(account != null);

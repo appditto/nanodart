@@ -1,24 +1,24 @@
 import 'dart:typed_data';
-import "dart:math";
-import "dart:core";
-import "package:convert/convert.dart";
-import 'package:fixnum/fixnum.dart';
+import 'dart:math';
+import 'dart:core';
+import 'package:convert/convert.dart';
+import 'package:fixnum_nanodart/fixnum.dart';
 import 'package:pointycastle/digests/blake2b.dart';
 
 /// A modified implementation of tweetnacl that uses blake2b instead of sha256
 
 class KeyPair {
-  Uint8List _publicKey;
-  Uint8List _secretKey;
+  Uint8List? _publicKey;
+  Uint8List? _secretKey;
 
   KeyPair(publicKeyLength, secretKeyLength) {
     _publicKey = Uint8List(publicKeyLength);
     _secretKey = Uint8List(secretKeyLength);
   }
 
-  Uint8List get publicKey => _publicKey;
+  Uint8List? get publicKey => _publicKey;
 
-  Uint8List get secretKey => _secretKey;
+  Uint8List? get secretKey => _secretKey;
 }
 
 /// Signature algorithm, Implements ed25519.
@@ -27,13 +27,13 @@ class Signature {
   static final int publicKeyLength = 32;
 
   /// Signs the message using the secret key and returns a signed message.
-  static Uint8List sign(Uint8List message, Uint8List secretKey) {
+  static Uint8List? sign(Uint8List message, Uint8List secretKey) {
     if (message == null) return null;
 
     return signLen(message, 0, message.length, secretKey);
   }
 
-  static Uint8List signLen(
+  static Uint8List? signLen(
       Uint8List message, final int moff, final int mlen, Uint8List secretKey) {
     // check message
     if (!(message != null && message.length >= (moff + mlen))) return null;
@@ -48,9 +48,9 @@ class Signature {
 
   ///  Signs the message using the secret key and returns a signature.
   static Uint8List detached(Uint8List message, Uint8List secretKey) {
-    Uint8List signedMsg = sign(message, secretKey);
+    Uint8List? signedMsg = sign(message, secretKey);
     Uint8List sig = Uint8List(signatureLength);
-    for (int i = 0; i < sig.length; i++) sig[i] = signedMsg[i];
+    for (int i = 0; i < sig.length; i++) sig[i] = signedMsg![i];
     return sig;
   }
 
@@ -108,10 +108,10 @@ class TweetNaclFast {
     0
   ]); //32
 
-  static final Uint64List gf0 =
-      Uint64List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
-  static final Uint64List gf1 =
-      Uint64List.fromList([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
+  static final Uint64List gf0 = Uint64List.fromList(
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
+  static final Uint64List gf1 = Uint64List.fromList(
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
   static final Uint64List one21665 = Uint64List.fromList(
       [0xDB41, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]); //16
 
@@ -317,94 +317,94 @@ class TweetNaclFast {
         u;
 
     for (int i = 0; i < 20; i += 2) {
-      u = x0 + x12 | 0;
+      u = x0 + x12 | 0 as Int32;
       x4 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x4 + x0 | 0;
+      u = x4 + x0 | 0 as Int32;
       x8 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x8 + x4 | 0;
+      u = x8 + x4 | 0 as Int32;
       x12 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x12 + x8 | 0;
+      u = x12 + x8 | 0 as Int32;
       x0 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x5 + x1 | 0;
+      u = x5 + x1 | 0 as Int32;
       x9 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x9 + x5 | 0;
+      u = x9 + x5 | 0 as Int32;
       x13 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x13 + x9 | 0;
+      u = x13 + x9 | 0 as Int32;
       x1 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x1 + x13 | 0;
+      u = x1 + x13 | 0 as Int32;
       x5 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x10 + x6 | 0;
+      u = x10 + x6 | 0 as Int32;
       x14 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x14 + x10 | 0;
+      u = x14 + x10 | 0 as Int32;
       x2 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x2 + x14 | 0;
+      u = x2 + x14 | 0 as Int32;
       x6 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x6 + x2 | 0;
+      u = x6 + x2 | 0 as Int32;
       x10 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x15 + x11 | 0;
+      u = x15 + x11 | 0 as Int32;
       x3 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x3 + x15 | 0;
+      u = x3 + x15 | 0 as Int32;
       x7 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x7 + x3 | 0;
+      u = x7 + x3 | 0 as Int32;
       x11 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x11 + x7 | 0;
+      u = x11 + x7 | 0 as Int32;
       x15 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x0 + x3 | 0;
+      u = x0 + x3 | 0 as Int32;
       x1 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x1 + x0 | 0;
+      u = x1 + x0 | 0 as Int32;
       x2 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x2 + x1 | 0;
+      u = x2 + x1 | 0 as Int32;
       x3 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x3 + x2 | 0;
+      u = x3 + x2 | 0 as Int32;
       x0 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x5 + x4 | 0;
+      u = x5 + x4 | 0 as Int32;
       x6 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x6 + x5 | 0;
+      u = x6 + x5 | 0 as Int32;
       x7 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x7 + x6 | 0;
+      u = x7 + x6 | 0 as Int32;
       x4 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x4 + x7 | 0;
+      u = x4 + x7 | 0 as Int32;
       x5 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x10 + x9 | 0;
+      u = x10 + x9 | 0 as Int32;
       x11 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x11 + x10 | 0;
+      u = x11 + x10 | 0 as Int32;
       x8 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x8 + x11 | 0;
+      u = x8 + x11 | 0 as Int32;
       x9 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x9 + x8 | 0;
+      u = x9 + x8 | 0 as Int32;
       x10 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x15 + x14 | 0;
+      u = x15 + x14 | 0 as Int32;
       x12 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x12 + x15 | 0;
+      u = x12 + x15 | 0 as Int32;
       x13 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x13 + x12 | 0;
+      u = x13 + x12 | 0 as Int32;
       x14 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x14 + x13 | 0;
+      u = x14 + x13 | 0 as Int32;
       x15 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
     }
-    x0 = x0 + j0 | 0;
-    x1 = x1 + j1 | 0;
-    x2 = x2 + j2 | 0;
-    x3 = x3 + j3 | 0;
-    x4 = x4 + j4 | 0;
-    x5 = x5 + j5 | 0;
-    x6 = x6 + j6 | 0;
-    x7 = x7 + j7 | 0;
-    x8 = x8 + j8 | 0;
-    x9 = x9 + j9 | 0;
-    x10 = x10 + j10 | 0;
-    x11 = x11 + j11 | 0;
-    x12 = x12 + j12 | 0;
-    x13 = x13 + j13 | 0;
-    x14 = x14 + j14 | 0;
-    x15 = x15 + j15 | 0;
+    x0 = x0 + j0 | 0 as Int32;
+    x1 = x1 + j1 | 0 as Int32;
+    x2 = x2 + j2 | 0 as Int32;
+    x3 = x3 + j3 | 0 as Int32;
+    x4 = x4 + j4 | 0 as Int32;
+    x5 = x5 + j5 | 0 as Int32;
+    x6 = x6 + j6 | 0 as Int32;
+    x7 = x7 + j7 | 0 as Int32;
+    x8 = x8 + j8 | 0 as Int32;
+    x9 = x9 + j9 | 0 as Int32;
+    x10 = x10 + j10 | 0 as Int32;
+    x11 = x11 + j11 | 0 as Int32;
+    x12 = x12 + j12 | 0 as Int32;
+    x13 = x13 + j13 | 0 as Int32;
+    x14 = x14 + j14 | 0 as Int32;
+    x15 = x15 + j15 | 0 as Int32;
 
     o[0] = (x0.shiftRightUnsigned(0) & 0xff).toInt();
     o[1] = (x0.shiftRightUnsigned(8) & 0xff).toInt();
@@ -573,76 +573,76 @@ class TweetNaclFast {
         u;
 
     for (int i = 0; i < 20; i += 2) {
-      u = x0 + x12 | 0;
+      u = x0 + x12 | 0 as Int32;
       x4 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x4 + x0 | 0;
+      u = x4 + x0 | 0 as Int32;
       x8 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x8 + x4 | 0;
+      u = x8 + x4 | 0 as Int32;
       x12 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x12 + x8 | 0;
+      u = x12 + x8 | 0 as Int32;
       x0 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x5 + x1 | 0;
+      u = x5 + x1 | 0 as Int32;
       x9 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x9 + x5 | 0;
+      u = x9 + x5 | 0 as Int32;
       x13 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x13 + x9 | 0;
+      u = x13 + x9 | 0 as Int32;
       x1 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x1 + x13 | 0;
+      u = x1 + x13 | 0 as Int32;
       x5 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x10 + x6 | 0;
+      u = x10 + x6 | 0 as Int32;
       x14 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x14 + x10 | 0;
+      u = x14 + x10 | 0 as Int32;
       x2 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x2 + x14 | 0;
+      u = x2 + x14 | 0 as Int32;
       x6 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x6 + x2 | 0;
+      u = x6 + x2 | 0 as Int32;
       x10 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x15 + x11 | 0;
+      u = x15 + x11 | 0 as Int32;
       x3 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x3 + x15 | 0;
+      u = x3 + x15 | 0 as Int32;
       x7 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x7 + x3 | 0;
+      u = x7 + x3 | 0 as Int32;
       x11 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x11 + x7 | 0;
+      u = x11 + x7 | 0 as Int32;
       x15 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x0 + x3 | 0;
+      u = x0 + x3 | 0 as Int32;
       x1 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x1 + x0 | 0;
+      u = x1 + x0 | 0 as Int32;
       x2 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x2 + x1 | 0;
+      u = x2 + x1 | 0 as Int32;
       x3 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x3 + x2 | 0;
+      u = x3 + x2 | 0 as Int32;
       x0 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x5 + x4 | 0;
+      u = x5 + x4 | 0 as Int32;
       x6 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x6 + x5 | 0;
+      u = x6 + x5 | 0 as Int32;
       x7 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x7 + x6 | 0;
+      u = x7 + x6 | 0 as Int32;
       x4 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x4 + x7 | 0;
+      u = x4 + x7 | 0 as Int32;
       x5 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x10 + x9 | 0;
+      u = x10 + x9 | 0 as Int32;
       x11 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x11 + x10 | 0;
+      u = x11 + x10 | 0 as Int32;
       x8 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x8 + x11 | 0;
+      u = x8 + x11 | 0 as Int32;
       x9 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x9 + x8 | 0;
+      u = x9 + x8 | 0 as Int32;
       x10 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
 
-      u = x15 + x14 | 0;
+      u = x15 + x14 | 0 as Int32;
       x12 ^= u << 7 | u.shiftRightUnsigned(32 - 7);
-      u = x12 + x15 | 0;
+      u = x12 + x15 | 0 as Int32;
       x13 ^= u << 9 | u.shiftRightUnsigned(32 - 9);
-      u = x13 + x12 | 0;
+      u = x13 + x12 | 0 as Int32;
       x14 ^= u << 13 | u.shiftRightUnsigned(32 - 13);
-      u = x14 + x13 | 0;
+      u = x14 + x13 | 0 as Int32;
       x15 ^= u << 18 | u.shiftRightUnsigned(32 - 18);
     }
 
@@ -734,7 +734,7 @@ class TweetNaclFast {
         c[cpos + i] = ((m[mpos + i] ^ x[i]) & 0xff).toInt();
       u = Int32(1);
       for (i = 8; i < 16; i++) {
-        u = u + (z[i] & 0xff) | 0;
+        u = u + (z[i] & 0xff) | 0 as Int32;
         z[i] = (u & 0xff).toInt();
         u = u.shiftRightUnsigned(8);
       }
@@ -763,7 +763,7 @@ class TweetNaclFast {
       for (i = 0; i < 64; i++) c[cpos + i] = x[i];
       u = Int32(1);
       for (i = 8; i < 16; i++) {
-        u = u + (z[i] & 0xff) | 0;
+        u = u + (z[i] & 0xff) | 0 as Int32;
         z[i] = (u & 0xff).toInt();
         u = u.shiftRightUnsigned(8);
       }
@@ -846,19 +846,19 @@ class TweetNaclFast {
     return 0;
   }
 
-  static void _set25519(Uint64List r, Uint64List a) {
+  static void _set25519(Uint64List? r, Uint64List a) {
     int i;
-    for (i = 0; i < 16; i++) r[i] = a[i];
+    for (i = 0; i < 16; i++) r![i] = a[i];
   }
 
   static void _car25519(Uint64List o) {
     int c;
     int i;
     for (i = 0; i < 16; i++) {
-        o[i] += 65536;
-        c = (o[i] / 65536).floor();
-        o[(i+1)*(i<15?1:0)] += c - 1 + 37 * (c-1) * (i==15?1:0);
-        o[i] -= (c * 65536);
+      o[i] += 65536;
+      c = (o[i] / 65536).floor();
+      o[(i + 1) * (i < 15 ? 1 : 0)] += c - 1 + 37 * (c - 1) * (i == 15 ? 1 : 0);
+      o[i] -= (c * 65536);
     }
   }
 
@@ -867,36 +867,36 @@ class TweetNaclFast {
   }
 
   static void _sel25519Off(
-      Uint64List p, final int poff, Uint64List q, final int qoff, int b) {
+      Uint64List? p, final int poff, Uint64List? q, final int qoff, int b) {
     int t, c = ~(b - 1);
     for (int i = 0; i < 16; i++) {
-      t = c & (p[i + poff] ^ q[i + qoff]);
+      t = c & (p![i + poff] ^ q![i + qoff]);
       p[i + poff] ^= t;
       q[i + qoff] ^= t;
     }
   }
 
-  static void _pack25519(Uint8List o, Uint64List n, final int noff) {
+  static void _pack25519(Uint8List o, Uint64List? n, final int noff) {
     int i, j, b;
     Uint64List m = Uint64List(16), t = Uint64List(16);
-    for (i = 0; i < 16; i++) t[i] = n[i + noff];
+    for (i = 0; i < 16; i++) t[i] = n![i + noff];
     _car25519(t);
     _car25519(t);
     _car25519(t);
     for (j = 0; j < 2; j++) {
       m[0] = t[0] - 0xffed;
       for (i = 1; i < 15; i++) {
-        m[i] = t[i] - 0xffff - ((m[i-1]>>16) & 1);
-        m[i-1] &= 0xffff;
+        m[i] = t[i] - 0xffff - ((m[i - 1] >> 16) & 1);
+        m[i - 1] &= 0xffff;
       }
-      m[15] = t[15] - 0x7fff - ((m[14]>>16) & 1);
-      b = (m[15]>>16) & 1;
+      m[15] = t[15] - 0x7fff - ((m[14] >> 16) & 1);
+      b = (m[15] >> 16) & 1;
       m[14] &= 0xffff;
-      _sel25519(t, m, 1-b);
+      _sel25519(t, m, 1 - b);
     }
     for (i = 0; i < 16; i++) {
-      o[2*i] = t[i] & 0xff;
-      o[2*i+1] = t[i]>>8;
+      o[2 * i] = t[i] & 0xff;
+      o[2 * i + 1] = t[i] >> 8;
     }
   }
 
@@ -912,11 +912,11 @@ class TweetNaclFast {
     return _cryptoVerify32(c, 0, d, 0);
   }
 
-  static int _par25519(Uint64List a) {
+  static int _par25519(Uint64List? a) {
     return _par25519Off(a, 0);
   }
 
-  static int _par25519Off(Uint64List a, final int aoff) {
+  static int _par25519Off(Uint64List? a, final int aoff) {
     Uint8List d = Uint8List(32);
     _pack25519(d, a, aoff);
     return (d[0] & 1);
@@ -925,27 +925,27 @@ class TweetNaclFast {
   static void unpack25519(Uint64List o, Uint8List n) {
     for (int i = 0; i < 16; i++)
       o[i] = (n[2 * i] & 0xff) + (((n[2 * i + 1] << 8) & 0xffff));
-    o[15] &= 0x7fff;   
+    o[15] &= 0x7fff;
   }
 
-  static void _a(Uint64List o, Uint64List a, Uint64List b) {
+  static void _a(Uint64List o, Uint64List? a, Uint64List b) {
     _aOff(o, 0, a, 0, b, 0);
   }
 
-  static void _aOff(Uint64List o, final int ooff, Uint64List a, final int aoff,
-      Uint64List b, final int boff) {
+  static void _aOff(Uint64List o, final int ooff, Uint64List? a, final int aoff,
+      Uint64List? b, final int boff) {
     int i;
-    for (i = 0; i < 16; i++) o[i + ooff] = a[i + aoff] + b[i + boff];
+    for (i = 0; i < 16; i++) o[i + ooff] = a![i + aoff] + b![i + boff];
   }
 
-  static void _z(Uint64List o, Uint64List a, Uint64List b) {
+  static void _z(Uint64List? o, Uint64List a, Uint64List? b) {
     _zOff(o, 0, a, 0, b, 0);
   }
 
-  static void _zOff(Uint64List o, final int ooff, Uint64List a, final int aoff,
-      Uint64List b, final int boff) {
+  static void _zOff(Uint64List? o, final int ooff, Uint64List? a,
+      final int aoff, Uint64List? b, final int boff) {
     int i;
-    for (i = 0; i < 16; i++) o[i + ooff] = a[i + aoff] - b[i + boff];
+    for (i = 0; i < 16; i++) o![i + ooff] = a![i + aoff] - b![i + boff];
   }
 
   static void _m(Uint64List o, Uint64List a, Uint64List b) {
@@ -1420,18 +1420,19 @@ class TweetNaclFast {
     _sOff(o, 0, a, 0);
   }
 
-  static void _sOff(Uint64List o, final int ooff, Uint64List a, final int aoff) {
+  static void _sOff(
+      Uint64List o, final int ooff, Uint64List a, final int aoff) {
     _mOff(o, ooff, a, aoff, a, aoff);
   }
 
   static void _inv25519(
-      Uint64List o, final int ooff, Uint64List i, final int ioff) {
+      Uint64List o, final int ooff, Uint64List? i, final int ioff) {
     Uint64List c = Uint64List(16);
     int a;
-    for (a = 0; a < 16; a++) c[a] = i[a + ioff];
+    for (a = 0; a < 16; a++) c[a] = i![a + ioff];
     for (a = 253; a >= 0; a--) {
       _sOff(c, 0, c, 0);
-      if (a != 2 && a != 4) _mOff(c, 0, c, 0, i, ioff);
+      if (a != 2 && a != 4) _mOff(c, 0, c, 0, i!, ioff);
     }
     for (a = 0; a < 16; a++) o[a + ooff] = c[a];
   }
@@ -1461,8 +1462,8 @@ class TweetNaclFast {
         e = Uint64List(16),
         f = Uint64List(16);
     for (i = 0; i < 31; i++) z[i] = n[i];
-    z[31]=(n[31]&127)|64;
-    z[0]&=248;
+    z[31] = (n[31] & 127) | 64;
+    z[0] &= 248;
     unpack25519(x, p);
     for (i = 0; i < 16; i++) {
       b[i] = x[i];
@@ -1585,7 +1586,7 @@ class TweetNaclFast {
 
 // gf: long[16]
   ///private static void add(gf p[4],gf q[4])
-  static void _add(List<Uint64List> p, List<Uint64List> q) {
+  static void _add(List<Uint64List?> p, List<Uint64List?> q) {
     Uint64List a = Uint64List(16);
     Uint64List b = Uint64List(16);
     Uint64List c = Uint64List(16);
@@ -1596,15 +1597,15 @@ class TweetNaclFast {
     Uint64List g = Uint64List(16);
     Uint64List h = Uint64List(16);
 
-    Uint64List p0 = p[0];
-    Uint64List p1 = p[1];
-    Uint64List p2 = p[2];
-    Uint64List p3 = p[3];
+    Uint64List p0 = p[0]!;
+    Uint64List p1 = p[1]!;
+    Uint64List p2 = p[2]!;
+    Uint64List p3 = p[3]!;
 
-    Uint64List q0 = q[0];
-    Uint64List q1 = q[1];
-    Uint64List q2 = q[2];
-    Uint64List q3 = q[3];
+    Uint64List? q0 = q[0];
+    Uint64List? q1 = q[1];
+    Uint64List q2 = q[2]!;
+    Uint64List q3 = q[3]!;
 
     _zOff(a, 0, p1, 0, p0, 0);
     _zOff(t, 0, q1, 0, q0, 0);
@@ -1628,20 +1629,20 @@ class TweetNaclFast {
     _mOff(p3, 0, e, 0, h, 0);
   }
 
-  static void _cswap(List<Uint64List> p, List<Uint64List> q, int b) {
+  static void _cswap(List<Uint64List?> p, List<Uint64List?> q, int b) {
     int i;
 
     for (i = 0; i < 4; i++) _sel25519Off(p[i], 0, q[i], 0, b);
   }
 
-  static void _pack(Uint8List r, List<Uint64List> p) {
+  static void _pack(Uint8List r, List<Uint64List?> p) {
     Uint64List tx = Uint64List(16);
     Uint64List ty = Uint64List(16);
     Uint64List zi = Uint64List(16);
 
     _inv25519(zi, 0, p[2], 0);
-    _mOff(tx, 0, p[0], 0, zi, 0);
-    _mOff(ty, 0, p[1], 0, zi, 0);
+    _mOff(tx, 0, p[0]!, 0, zi, 0);
+    _mOff(ty, 0, p[1]!, 0, zi, 0);
 
     _pack25519(r, ty, 0);
 
@@ -1649,7 +1650,7 @@ class TweetNaclFast {
   }
 
   static void _scalarmult(
-      List<Uint64List> p, List<Uint64List> q, Uint8List s, final int soff) {
+      List<Uint64List?> p, List<Uint64List?> q, Uint8List s, final int soff) {
     int i;
 
     _set25519(p[0], gf0);
@@ -1669,8 +1670,8 @@ class TweetNaclFast {
     }
   }
 
-  static void _scalarbase(List<Uint64List> p, Uint8List s, final int soff) {
-    List<Uint64List> q = List<Uint64List>(4);
+  static void _scalarbase(List<Uint64List?> p, Uint8List s, final int soff) {
+    List<Uint64List?> q = List<Uint64List?>.filled(4, Uint64List(0));
 
     q[0] = Uint64List(16);
     q[1] = Uint64List(16);
@@ -1680,13 +1681,13 @@ class TweetNaclFast {
     _set25519(q[0], x);
     _set25519(q[1], y);
     _set25519(q[2], gf1);
-    _mOff(q[3], 0, x, 0, y, 0);
+    _mOff(q[3]!, 0, x, 0, y, 0);
     _scalarmult(p, q, s, soff);
   }
 
   static int cryptoSignKeypair(Uint8List pk, Uint8List sk, bool seeded) {
     Uint8List d = Uint8List(64);
-    List<Uint64List> p = List<Uint64List>(4);
+    List<Uint64List?> p = List<Uint64List?>.filled(4, Uint64List(0));
 
     p[0] = Uint64List(16);
     p[1] = Uint64List(16);
@@ -1791,7 +1792,7 @@ class TweetNaclFast {
     int i, j;
 
     Uint64List x = Uint64List(64);
-    List<Uint64List> p = List<Uint64List>(4);
+    List<Uint64List?> p = List<Uint64List?>.filled(4, Uint64List(0));
 
     p[0] = Uint64List(16);
     p[1] = Uint64List(16);
@@ -1839,7 +1840,7 @@ class TweetNaclFast {
     return smlen;
   }
 
-  static int _unpackneg(List<Uint64List> r, Uint8List p) {
+  static int _unpackneg(List<Uint64List?> r, Uint8List p) {
     Uint64List t = Uint64List(16);
     Uint64List chk = Uint64List(16);
     Uint64List num = Uint64List(16);
@@ -1849,8 +1850,8 @@ class TweetNaclFast {
     Uint64List den6 = Uint64List(16);
 
     _set25519(r[2], gf1);
-    unpack25519(r[1], p);
-    _s(num, r[1]);
+    unpack25519(r[1]!, p);
+    _s(num, r[1]!);
     _m(den, num, D);
     _z(num, num, r[2]);
     _a(den, r[2], den);
@@ -1865,20 +1866,20 @@ class TweetNaclFast {
     _m(t, t, num);
     _m(t, t, den);
     _m(t, t, den);
-    _m(r[0], t, den);
+    _m(r[0]!, t, den);
 
-    _s(chk, r[0]);
+    _s(chk, r[0]!);
     _m(chk, chk, den);
-    if (_neq25519(chk, num) != 0) _m(r[0], r[0], i);
+    if (_neq25519(chk, num) != 0) _m(r[0]!, r[0]!, i);
 
-    _s(chk, r[0]);
+    _s(chk, r[0]!);
     _m(chk, chk, den);
     if (_neq25519(chk, num) != 0) return -1;
 
     if (_par25519(r[0]) == (Int32(p[31] & 0xFF).shiftRightUnsigned(7).toInt()))
       _z(r[0], gf0, r[0]);
 
-    _m(r[3], r[0], r[1]);
+    _m(r[3]!, r[0]!, r[1]!);
 
     return 0;
   }
@@ -1889,14 +1890,14 @@ class TweetNaclFast {
       Uint8List sm, final int smoff, int /*long*/ n, Uint8List pk) {
     int i;
     Uint8List t = Uint8List(32), h = Uint8List(64);
-    List<Uint64List> p = List<Uint64List>(4);
+    List<Uint64List?> p = List<Uint64List?>.filled(4, Uint64List(0));
 
     p[0] = Uint64List(16);
     p[1] = Uint64List(16);
     p[2] = Uint64List(16);
     p[3] = Uint64List(16);
 
-    List<Uint64List> q = List<Uint64List>(4);
+    List<Uint64List?> q = List<Uint64List?>.filled(4, Uint64List(0));
     q[0] = Uint64List(16);
     q[1] = Uint64List(16);
     q[2] = Uint64List(16);
@@ -1977,12 +1978,12 @@ class TweetNaclFast {
  * https://github.com/floodyberry/poly1305-donna
  */
 class Poly1305 {
-  Uint8List _buffer;
-  List<Int32> _r;
-  List<Int32> _h;
-  Int32List _pad;
-  int _leftover;
-  int _fin;
+  Uint8List? _buffer;
+  late List<Int32> _r;
+  late List<Int32> _h;
+  late Int32List _pad;
+  int _leftover = 0;
+  int? _fin;
 
   Poly1305(Uint8List key) {
     this._buffer = Uint8List(16);
@@ -2023,7 +2024,7 @@ class Poly1305 {
     this._pad[7] = key[30] & 0xff | (key[31] & 0xff) << 8;
   }
 
-  Poly1305 blocks(Uint8List m, int mpos, int bytes) {
+  Poly1305 blocks(Uint8List? m, int mpos, int bytes) {
     int hibit = this._fin != 0 ? 0 : (1 << 11);
     Int32 t0, t1, t2, t3, t4, t5, t6, t7, c;
     Int32 d0, d1, d2, d3, d4, d5, d6, d7, d8, d9;
@@ -2051,7 +2052,7 @@ class Poly1305 {
         r9 = this._r[9].toInt();
 
     while (bytes >= 16) {
-      t0 = Int32(m[mpos + 0] & 0xff | (m[mpos + 1] & 0xff) << 8);
+      t0 = Int32(m![mpos + 0] & 0xff | (m[mpos + 1] & 0xff) << 8);
       h0 += (t0).toInt() & 0x1fff;
       t1 = Int32(m[mpos + 2] & 0xff | (m[mpos + 3] & 0xff) << 8);
       h1 += ((t0.shiftRightUnsigned(13)) | (t1 << 3)).toInt() & 0x1fff;
@@ -2232,8 +2233,8 @@ class Poly1305 {
       c += (d9.shiftRightUnsigned(13));
       d9 &= 0x1fff;
 
-      c = (((c << 2) + c)) | 0;
-      c = (c + d0) | 0;
+      c = (((c << 2) + c)) | 0 as Int32;
+      c = (c + d0) | 0 as Int32;
       d0 = c & 0x1fff;
       c = (c.shiftRightUnsigned(13));
       d1 += c;
@@ -2267,14 +2268,14 @@ class Poly1305 {
   }
 
   Poly1305 finish(Uint8List mac, int macpos) {
-    List<Int32> g = List<Int32>(10);
+    List<Int32> g = List<Int32>.filled(10, Int32(0));
     int i;
     Int32 c, mask, f;
 
     if (this._leftover != 0) {
       i = this._leftover;
-      this._buffer[i++] = 1;
-      for (; i < 16; i++) this._buffer[i] = 0;
+      this._buffer![i++] = 1;
+      for (; i < 16; i++) this._buffer![i] = 0;
       this._fin = 1;
       this.blocks(this._buffer, 0, 16);
     }
@@ -2294,11 +2295,11 @@ class Poly1305 {
     this._h[1] &= 0x1fff;
     this._h[2] += c;
 
-    g[0] = this._h[0] + 5;
+    g[0] = this._h[0] + 5 as Int32;
     c = g[0].shiftRightUnsigned(13);
     g[0] &= 0x1fff;
     for (i = 1; i < 10; i++) {
-      g[i] = this._h[i] + c;
+      g[i] = this._h[i] + c as Int32;
       c = g[i].shiftRightUnsigned(13);
       g[i] &= 0x1fff;
     }
@@ -2315,7 +2316,7 @@ class Poly1305 {
                         >>>
                         */
     ///change mask = (g[9] >>> ((2 * 8) - 1)) - 1; to as
-    mask = (c ^ 1) - 1;
+    mask = (c ^ 1) - 1 as Int32;
     mask &= 0xffff;
     ///////////////////////////////////////
 
@@ -2341,10 +2342,11 @@ class Poly1305 {
     this._h[7] =
         ((this._h[8].shiftRightUnsigned(8)) | (this._h[9] << 5)) & 0xffff;
 
-    f = this._h[0] + this._pad[0];
+    f = this._h[0] + this._pad[0] as Int32;
     this._h[0] = f & 0xffff;
     for (i = 1; i < 8; i++) {
-      f = (((this._h[i] + this._pad[i]) | 0) + (f.shiftRightUnsigned(16))) | 0;
+      f = (((this._h[i] + this._pad[i]) | 0) + (f.shiftRightUnsigned(16))) | 0
+          as Int32;
       this._h[i] = f & 0xffff;
     }
 
@@ -2374,7 +2376,8 @@ class Poly1305 {
     if (this._leftover != 0) {
       want = (16 - this._leftover);
       if (want > bytes) want = bytes;
-      for (i = 0; i < want; i++) this._buffer[this._leftover + i] = m[mpos + i];
+      for (i = 0; i < want; i++)
+        this._buffer![this._leftover + i] = m[mpos + i];
       bytes -= want;
       mpos += want;
       this._leftover += want;
@@ -2392,7 +2395,7 @@ class Poly1305 {
 
     if (bytes != 0) {
       for (i = 0; i < bytes; i++)
-        this._buffer[this._leftover + i] = m[mpos + i];
+        this._buffer![this._leftover + i] = m[mpos + i];
       this._leftover += bytes;
     }
 
@@ -2403,7 +2406,7 @@ class Poly1305 {
 class Nano {
   static Uint8List pkFromSecret(Uint8List secretKey) {
     Uint8List d = Uint8List(64);
-    List<Uint64List> p = List<Uint64List>(4);
+    List<Uint64List?> p = List<Uint64List?>.filled(4, Uint64List(0));
 
     p[0] = Uint64List(16);
     p[1] = Uint64List(16);
